@@ -10,11 +10,9 @@ import (
 
 	systemd "github.com/coreos/go-systemd/daemon"
 	"github.com/pkg/errors"
-	"github.com/rancher/k3s/pkg/agent"
 	"github.com/rancher/k3s/pkg/cli/cmds"
 	"github.com/rancher/k3s/pkg/datadir"
 	"github.com/rancher/k3s/pkg/netutil"
-	"github.com/rancher/k3s/pkg/rootless"
 	"github.com/rancher/k3s/pkg/server"
 	"github.com/rancher/wrangler/pkg/signals"
 	"github.com/sirupsen/logrus"
@@ -43,16 +41,16 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 		return fmt.Errorf("must run as root unless --disable-agent is specified")
 	}
 
-	if cfg.Rootless {
-		dataDir, err := datadir.LocalHome(cfg.DataDir, true)
-		if err != nil {
-			return err
-		}
-		cfg.DataDir = dataDir
-		if err := rootless.Rootless(dataDir); err != nil {
-			return err
-		}
-	}
+	//if cfg.Rootless {
+	//	dataDir, err := datadir.LocalHome(cfg.DataDir, true)
+	//	if err != nil {
+	//		return err
+	//	}
+	//	cfg.DataDir = dataDir
+	//	//if err := rootless.Rootless(dataDir); err != nil {
+	//	//	return err
+	//	//}
+	//}
 
 	serverConfig := server.Config{}
 	serverConfig.ControlConfig.ClusterSecret = cfg.ClusterSecret
@@ -149,10 +147,10 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 	os.Unsetenv("NOTIFY_SOCKET")
 
 	ctx := signals.SetupSignalHandler(context.Background())
-	certs, err := server.StartServer(ctx, &serverConfig)
-	if err != nil {
-		return err
-	}
+	//certs, err := server.StartServer(ctx, &serverConfig)
+	//if err != nil {
+	//	return err
+	//}
 
 	logrus.Info("k3s is up and running")
 	if notifySocket != "" {
@@ -164,21 +162,24 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 		<-ctx.Done()
 		return nil
 	}
-	ip := serverConfig.TLSConfig.BindAddress
-	if ip == "" {
-		ip = "127.0.0.1"
-	}
-	url := fmt.Sprintf("https://%s:%d", ip, serverConfig.TLSConfig.HTTPSPort)
-	token := server.FormatToken(serverConfig.ControlConfig.Runtime.NodeToken, certs)
+	return nil
 
-	agentConfig := cmds.AgentConfig
-	agentConfig.Debug = app.GlobalBool("bool")
-	agentConfig.DataDir = filepath.Dir(serverConfig.ControlConfig.DataDir)
-	agentConfig.ServerURL = url
-	agentConfig.Token = token
-	agentConfig.DisableLoadBalancer = true
+	//ip := serverConfig.TLSConfig.BindAddress
+	//if ip == "" {
+	//	ip = "127.0.0.1"
+	//}
+	//url := fmt.Sprintf("https://%s:%d", ip, serverConfig.TLSConfig.HTTPSPort)
+	//token := server.FormatToken(serverConfig.ControlConfig.Runtime.NodeToken, certs)
+	//
+	//agentConfig := cmds.AgentConfig
+	//agentConfig.Debug = app.GlobalBool("bool")
+	//agentConfig.DataDir = filepath.Dir(serverConfig.ControlConfig.DataDir)
+	//agentConfig.ServerURL = url
+	//agentConfig.Token = token
+	//agentConfig.DisableLoadBalancer = true
+	//
+	//return agent.Run(ctx, agentConfig)
 
-	return agent.Run(ctx, agentConfig)
 }
 
 func knownIPs(ips []string) []string {

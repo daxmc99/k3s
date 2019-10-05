@@ -107,6 +107,7 @@ require (
 	github.com/tchap/go-patricia v2.3.0+incompatible // indirect
 	github.com/theckman/go-flock v0.7.1 // indirect
 	github.com/urfave/cli v1.21.0
+	github.com/vishvananda/netlink v1.0.1-0.20190930145447-2ec5bdc52b86 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
 	golang.org/x/net v0.0.0-20190812203447-cdfb69ac37fc
 	golang.org/x/sys v0.0.0-20190916202348-b4ddaad3f8a3

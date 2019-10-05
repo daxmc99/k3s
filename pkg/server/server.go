@@ -22,7 +22,6 @@ import (
 	"github.com/rancher/k3s/pkg/datadir"
 	"github.com/rancher/k3s/pkg/deploy"
 	"github.com/rancher/k3s/pkg/node"
-	"github.com/rancher/k3s/pkg/rootlessports"
 	"github.com/rancher/k3s/pkg/servicelb"
 	"github.com/rancher/k3s/pkg/static"
 	"github.com/rancher/k3s/pkg/tls"
@@ -161,9 +160,9 @@ func masterControllers(ctx context.Context, sc *Context, config *Config) error {
 		return err
 	}
 
-	if !config.DisableServiceLB && config.Rootless {
-		return rootlessports.Register(ctx, sc.Core.Core().V1().Service(), config.TLSConfig.HTTPSPort)
-	}
+	//if !config.DisableServiceLB && config.Rootless {
+	//	return rootlessports.Register(ctx, sc.Core.Core().V1().Service(), config.TLSConfig.HTTPSPort)
+	//}
 
 	return nil
 }
