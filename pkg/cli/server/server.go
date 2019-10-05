@@ -147,10 +147,10 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 	os.Unsetenv("NOTIFY_SOCKET")
 
 	ctx := signals.SetupSignalHandler(context.Background())
-	//certs, err := server.StartServer(ctx, &serverConfig)
-	//if err != nil {
-	//	return err
-	//}
+	_, err = server.StartServer(ctx, &serverConfig)
+	if err != nil {
+		return err
+	}
 
 	logrus.Info("k3s is up and running")
 	if notifySocket != "" {
