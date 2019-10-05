@@ -74,6 +74,7 @@ func Server(ctx context.Context, cfg *config.Control) error {
 	cfg.Runtime = runtime
 
 	if err := prepare(ctx, cfg, runtime); err != nil {
+		logrus.Printf("line 77")
 		return err
 	}
 
@@ -82,6 +83,7 @@ func Server(ctx context.Context, cfg *config.Control) error {
 
 	auth, handler, err := apiServer(ctx, cfg, runtime)
 	if err != nil {
+		logrus.Printf("line 86")
 		return err
 	}
 
