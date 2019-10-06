@@ -421,13 +421,18 @@ func WritePasswords(passwdFile string, records [][]string) error {
 	if err != nil {
 		return err
 	}
-	defer out.Close()
 
-	if err := out.Chmod(0600); err != nil {
-		return err
-	}
+	// TODO chmod is not availible on windows
+	//if err := out.Chmod(0600); err != nil {
+	//	return err
+	//}
 
 	if err := csv.NewWriter(out).WriteAll(records); err != nil {
+		return err
+	}
+	// close file before renaming it
+	err = out.Close()
+	if err != nil {
 		return err
 	}
 
