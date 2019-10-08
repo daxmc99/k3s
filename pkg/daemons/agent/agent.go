@@ -110,21 +110,21 @@ func kubelet(cfg *config.Agent) {
 	if err != nil || defaultIP.String() != cfg.NodeIP {
 		argsMap["node-ip"] = cfg.NodeIP
 	}
-	root, hasCFS, hasPIDs := checkCgroups()
-	if !hasCFS {
-		logrus.Warn("Disabling CPU quotas due to missing cpu.cfs_period_us")
-		argsMap["cpu-cfs-quota"] = "false"
-	}
-	if !hasPIDs {
-		logrus.Warn("Disabling pod PIDs limit feature due to missing cgroup pids support")
-		argsMap["cgroups-per-qos"] = "false"
-		argsMap["enforce-node-allocatable"] = ""
-		argsMap["feature-gates"] = addFeatureGate(argsMap["feature-gates"], "SupportPodPidsLimit=false")
-	}
-	if root != "" {
-		argsMap["runtime-cgroups"] = root
-		argsMap["kubelet-cgroups"] = root
-	}
+	//root, hasCFS, hasPIDs := checkCgroups()
+	//if !hasCFS {
+	logrus.Warn("Disabling CPU quotas due to missing cpu.cfs_period_us")
+	argsMap["cpu-cfs-quota"] = "false"
+	//}
+	//if !hasPIDs {
+	logrus.Warn("Disabling pod PIDs limit feature due to missing cgroup pids support")
+	argsMap["cgroups-per-qos"] = "false"
+	//argsMap["enforce-node-allocatable"] = ""
+	//argsMap["feature-gates"] = addFeatureGate(argsMap["feature-gates"], "SupportPodPidsLimit=false")
+	//}
+	//if root != "" {
+	//	argsMap["runtime-cgroups"] = root
+	//	argsMap["kubelet-cgroups"] = root
+	//}
 	if system.RunningInUserNS() {
 		argsMap["feature-gates"] = addFeatureGate(argsMap["feature-gates"], "DevicePlugins=false")
 	}
