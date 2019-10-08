@@ -310,9 +310,9 @@ func prepare(ctx context.Context, config *config.Control, runtime *config.Contro
 		return err
 	}
 
-	if err := genEncryptedNetworkInfo(config, runtime); err != nil {
-		return err
-	}
+	//if err := genEncryptedNetworkInfo(config, runtime); err != nil {
+	//	return err
+	//}
 
 	if err := storeBootstrapData(ctx, config, etcdClient); err != nil {
 		return err
