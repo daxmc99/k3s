@@ -11,7 +11,6 @@ import (
 
 	"github.com/rancher/k3s/pkg/cli/agent"
 	"github.com/rancher/k3s/pkg/cli/cmds"
-	"github.com/rancher/k3s/pkg/cli/crictl"
 	"github.com/rancher/k3s/pkg/cli/kubectl"
 	"github.com/rancher/k3s/pkg/cli/server"
 	"github.com/sirupsen/logrus"
@@ -24,7 +23,7 @@ func main() {
 		cmds.NewServerCommand(server.Run),
 		cmds.NewAgentCommand(agent.Run),
 		cmds.NewKubectlCommand(kubectl.Run),
-		cmds.NewCRICTL(crictl.Run),
+		//cmds.NewCRICTL(crictl.Run),
 	}
 
 	if err := app.Run(os.Args); err != nil {

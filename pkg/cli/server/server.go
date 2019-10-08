@@ -14,7 +14,6 @@ import (
 	"github.com/rancher/k3s/pkg/cli/cmds"
 	"github.com/rancher/k3s/pkg/datadir"
 	"github.com/rancher/k3s/pkg/netutil"
-	"github.com/rancher/k3s/pkg/rootless"
 	"github.com/rancher/k3s/pkg/server"
 	"github.com/rancher/wrangler/pkg/signals"
 	"github.com/sirupsen/logrus"
@@ -43,16 +42,6 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 		return fmt.Errorf("must run as root unless --disable-agent is specified")
 	}
 
-	if cfg.Rootless {
-		dataDir, err := datadir.LocalHome(cfg.DataDir, true)
-		if err != nil {
-			return err
-		}
-		cfg.DataDir = dataDir
-		if err := rootless.Rootless(dataDir); err != nil {
-			return err
-		}
-	}
 
 	serverConfig := server.Config{}
 	serverConfig.ControlConfig.ClusterSecret = cfg.ClusterSecret
