@@ -62,7 +62,7 @@ func kubelet(cfg *config.Agent) {
 		"eviction-minimum-reclaim": "imagefs.available=10%,nodefs.available=10%",
 		"fail-swap-on":             "false",
 		//"cgroup-root": "/k3s",
-		"cgroup-driver":                "cgroupfs",
+		//"cgroup-driver":                "cgroupfs",
 		"authentication-token-webhook": "true",
 		"anonymous-auth":               "false",
 		"authorization-mode":           modes.ModeWebhook,
@@ -70,7 +70,7 @@ func kubelet(cfg *config.Agent) {
 	if cfg.RootDir != "" {
 		argsMap["root-dir"] = cfg.RootDir
 		argsMap["cert-dir"] = filepath.Join(cfg.RootDir, "pki")
-		argsMap["seccomp-profile-root"] = filepath.Join(cfg.RootDir, "seccomp")
+		//argsMap["seccomp-profile-root"] = filepath.Join(cfg.RootDir, "seccomp")
 	}
 	if cfg.CNIConfDir != "" {
 		argsMap["cni-conf-dir"] = cfg.CNIConfDir
@@ -118,8 +118,8 @@ func kubelet(cfg *config.Agent) {
 	//if !hasPIDs {
 	logrus.Warn("Disabling pod PIDs limit feature due to missing cgroup pids support")
 	argsMap["cgroups-per-qos"] = "false"
-	//argsMap["enforce-node-allocatable"] = ""
-	//argsMap["feature-gates"] = addFeatureGate(argsMap["feature-gates"], "SupportPodPidsLimit=false")
+	argsMap["enforce-node-allocatable"] = ""
+	argsMap["feature-gates"] = addFeatureGate(argsMap["feature-gates"], "SupportPodPidsLimit=false")
 	//}
 	//if root != "" {
 	//	argsMap["runtime-cgroups"] = root
