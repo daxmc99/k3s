@@ -57,9 +57,10 @@ func run(ctx context.Context, cfg cmds.Agent, lb *loadbalancer.LoadBalancer) err
 }
 
 func Run(ctx context.Context, cfg cmds.Agent) error {
-	if err := validate(); err != nil {
-		return err
-	}
+	//if err := validate(); err != nil {
+	//	return err
+	//}
+	logrus.Warnf("skipping c-group validation")
 
 	cfg.DataDir = filepath.Join(cfg.DataDir, "agent")
 	os.MkdirAll(cfg.DataDir, 0700)
