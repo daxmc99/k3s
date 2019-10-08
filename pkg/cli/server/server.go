@@ -38,10 +38,10 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 		err error
 	)
 
-	if !cfg.DisableAgent && os.Getuid() != 0 && !cfg.Rootless {
-		return fmt.Errorf("must run as root unless --disable-agent is specified")
-	}
-
+	//if !cfg.DisableAgent && os.Getuid() != 0 && !cfg.Rootless {
+	//	return fmt.Errorf("must run as root unless --disable-agent is specified")
+	//}
+	fmt.Println("Make sure you're root otherwise this will end badly")
 
 	serverConfig := server.Config{}
 	serverConfig.ControlConfig.ClusterSecret = cfg.ClusterSecret
