@@ -421,12 +421,16 @@ func WritePasswords(passwdFile string, records [][]string) error {
 	}
 	defer out.Close()
 
-	if err := out.Chmod(0600); err != nil {
-		return err
-	}
+	//if err := out.Chmod(0600); err != nil {
+	//	return err
+	//}
 
 	if err := csv.NewWriter(out).WriteAll(records); err != nil {
 		return err
+	}
+
+	if err = out.Close(); err != nil {
+		logrus.Errorf("error closing file %v", err)
 	}
 
 	return os.Rename(passwdFile+".tmp", passwdFile)
