@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -18,7 +19,6 @@ import (
 	"github.com/rancher/k3s/pkg/cli/cmds"
 	"github.com/rancher/k3s/pkg/clientaccess"
 	"github.com/rancher/k3s/pkg/daemons/agent"
-	"github.com/rancher/k3s/pkg/rootless"
 	"github.com/sirupsen/logrus"
 )
 
@@ -63,14 +63,12 @@ func run(ctx context.Context, cfg cmds.Agent, lb *loadbalancer.LoadBalancer) err
 }
 
 func Run(ctx context.Context, cfg cmds.Agent) error {
-	if err := validate(); err != nil {
-		return err
-	}
-
-	if cfg.Rootless {
-		if err := rootless.Rootless(cfg.DataDir); err != nil {
+	if runtime.GOOS != "windows" {
+		if err := validate(); err != nil {
 			return err
 		}
+	} else {
+		logrus.Warnln("skipping validation on windows")
 	}
 
 	cfg.DataDir = filepath.Join(cfg.DataDir, "agent")

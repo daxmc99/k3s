@@ -6,6 +6,7 @@ import (
 	net2 "net"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	systemd "github.com/coreos/go-systemd/daemon"
@@ -14,7 +15,6 @@ import (
 	"github.com/rancher/k3s/pkg/cli/cmds"
 	"github.com/rancher/k3s/pkg/datadir"
 	"github.com/rancher/k3s/pkg/netutil"
-	"github.com/rancher/k3s/pkg/rootless"
 	"github.com/rancher/k3s/pkg/server"
 	"github.com/rancher/wrangler/pkg/signals"
 	"github.com/sirupsen/logrus"
@@ -39,19 +39,12 @@ func run(app *cli.Context, cfg *cmds.Server) error {
 		err error
 	)
 
-	if !cfg.DisableAgent && os.Getuid() != 0 && !cfg.Rootless {
+	// TODO: figure out a way to check for admin prompt on windows
+	if !cfg.DisableAgent && os.Getuid() != 0 && runtime.GOOS != "windows" {
 		return fmt.Errorf("must run as root unless --disable-agent is specified")
 	}
-
-	if cfg.Rootless {
-		dataDir, err := datadir.LocalHome(cfg.DataDir, true)
-		if err != nil {
-			return err
-		}
-		cfg.DataDir = dataDir
-		if err := rootless.Rootless(dataDir); err != nil {
-			return err
-		}
+	if runtime.GOOS == "windows" {
+		logrus.Warnln("Make sure you're root otherwise this will end badly")
 	}
 
 	serverConfig := server.Config{}

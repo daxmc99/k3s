@@ -17,6 +17,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	goruntime "runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -310,8 +311,10 @@ func prepare(ctx context.Context, config *config.Control, runtime *config.Contro
 		return err
 	}
 
-	if err := genEncryptedNetworkInfo(config, runtime); err != nil {
-		return err
+	if goruntime.GOOS != "windows" {
+		if err := genEncryptedNetworkInfo(config, runtime); err != nil {
+			return err
+		}
 	}
 
 	if err := storeBootstrapData(ctx, config, etcdClient); err != nil {
@@ -421,11 +424,17 @@ func WritePasswords(passwdFile string, records [][]string) error {
 	}
 	defer out.Close()
 
-	if err := out.Chmod(0600); err != nil {
-		return err
+	if goruntime.GOOS != "windows" {
+		if err := out.Chmod(0600); err != nil {
+			return err
+		}
 	}
 
 	if err := csv.NewWriter(out).WriteAll(records); err != nil {
+		return err
+	}
+	if err = out.Close(); err != nil {
+		logrus.Errorf("error closing file %v", err)
 		return err
 	}
 
